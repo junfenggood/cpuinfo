@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+
+{% block page_content %}
+<div class="page-header">
+	<button id="btu">refresh</button>
+
+</div>
+<div id="main" style="height:400px"></div>
+<script src="{{ url_for('static', filename='js/echarts.common.min.js')}}"></script>
+<script type="text/javascript">
+		var myChart = echarts.init(document.getElementById('main'));
+		myChart.setOption({
+			title: { text: 'CPU'},
+			tooltip: { show:true },
+			legend : { data: ['cpu ratio'] },
+			xAxis: { data: {} },
+			yAxis: {},
+			series: [{
+				name: 'cpu ratio',
+				type: 'line',
+				data: []
+			}]
+		});
+		$("#btu").click(function (){
+			$.getJSON('/cpuinfo/30', function(data){
+				myChart.setOption({
+					xAxis: {
+						data: data.time
+						},
+					series: [{
+						name: 'Cpu ratio',
+						data: data.ratio
+
+						}]
+					});
+				});
+			});
+
+	</script>
+{% endblock %}
